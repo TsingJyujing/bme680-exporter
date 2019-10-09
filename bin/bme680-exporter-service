@@ -1,0 +1,8 @@
+#!/bin/python3
+import logging
+
+from bme680_exporter.service import start_web_service
+
+if __name__ == '__main__':
+    logging.basicConfig(level=logging.INFO)
+    start_web_service()
