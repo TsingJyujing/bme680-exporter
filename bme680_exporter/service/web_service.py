@@ -1,5 +1,4 @@
 from flask import Flask, make_response
-# Initialize App
 from prometheus_client import CollectorRegistry, generate_latest, CONTENT_TYPE_LATEST
 
 from bme680_exporter.core import SensorUpdater, create_update_function
