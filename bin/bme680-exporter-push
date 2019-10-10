@@ -1,7 +1,0 @@
-#!/bin/python3
-from bme680_exporter.push import start_push_service
-import logging
-
-if __name__ == '__main__':
-    logging.basicConfig(level=logging.INFO)
-    start_push_service()

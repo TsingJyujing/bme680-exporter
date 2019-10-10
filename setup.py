@@ -30,7 +30,10 @@ setup(
     platforms='any',
     zip_safe=True,
     include_package_data=True,
-    scripts=[
-        "bin/bme680-exporter-push"
-    ]
+    entry_points={
+        'console_scripts': [
+            'bme680-exporter-push=bme680_exporter.push:start_push_service',
+            'bme680-exporter-pull=bme680_exporter.service:start_web_service'
+        ],
+    }
 )
