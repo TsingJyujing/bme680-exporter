@@ -1,6 +1,6 @@
 import os
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 here = os.path.abspath(os.path.dirname(__file__))
 
@@ -24,9 +24,9 @@ setup(
         "requests"
     ],
     long_description=README,
-    packages=[
+    packages=find_packages(
         "bme680_exporter"
-    ],
+    ),
     platforms='any',
     zip_safe=True,
     include_package_data=True,
