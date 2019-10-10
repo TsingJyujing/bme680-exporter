@@ -6,12 +6,19 @@ from typing import Optional, Callable
 
 import bme680
 from bme680 import FieldData
-from prometheus_client import Gauge, CollectorRegistry, generate_latest
+from prometheus_client import Gauge, CollectorRegistry
 
 log = logging.getLogger(__file__)
 
 
 def set_gauge(gauge: Gauge, value: float, labels: dict):
+    """
+    Set gauge value with auto labeling
+    :param gauge:
+    :param value:
+    :param labels:
+    :return:
+    """
     if len(labels) > 0:
         gauge.labels(**labels).set(value)
     else:

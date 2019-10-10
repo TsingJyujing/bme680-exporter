@@ -1,3 +1,4 @@
+import atexit
 import logging
 import signal
 
@@ -46,11 +47,13 @@ def start_push_service():
         update_period=args.update_period
     )
 
-    def signal_handler(**kwargs):
+    def signal_handler(*args):
         sensor_read_thread.stop_update()
         requests.delete(service).raise_for_status()
 
     for signal_id in (signal.SIGINT, signal.SIGTERM):
         signal.signal(signal_id, signal_handler)
+
+    atexit.register(signal_handler)
 
     sensor_read_thread.run()
