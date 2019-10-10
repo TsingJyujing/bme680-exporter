@@ -24,9 +24,7 @@ setup(
         "requests"
     ],
     long_description=README,
-    packages=find_packages(
-        "bme680_exporter"
-    ),
+    packages=find_packages(),
     platforms='any',
     zip_safe=True,
     include_package_data=True,
