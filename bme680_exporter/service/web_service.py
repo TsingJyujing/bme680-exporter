@@ -29,7 +29,7 @@ def parse_args():
         help="Service bind port number",
     )
     parser.add_argument(
-        "-h", "--host",
+        "--host",
         default='0.0.0.0', type=str,
         help="Service bind hostname",
     )

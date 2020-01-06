@@ -33,7 +33,7 @@ def get_base_arg_parser() -> ArgumentParser:
         help="Period to read motion sensor",
     )
     parser.add_argument(
-        "-p", "--port-id",
+        "--port-id",
         type=int, required=True,
         help="Wiring port of the motion sensor",
     )
