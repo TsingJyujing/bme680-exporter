@@ -1,1 +1,1 @@
-from .sensor import SensorUpdater, create_update_function
+from .sensor import SensorUpdater, create_update_function, MotionDataGenerator

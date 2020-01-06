@@ -6,7 +6,7 @@ import requests
 from bme680 import FieldData
 from prometheus_client import CollectorRegistry, generate_latest
 
-from bme680_exporter.core import SensorUpdater, create_update_function
+from bme680_exporter.core import SensorUpdater, create_update_function, MotionDataGenerator
 from bme680_exporter.util import get_base_arg_parser, parse_key_value_pairs
 
 log = logging.getLogger(__file__)
@@ -27,9 +27,10 @@ def start_push_service():
 
     registry = CollectorRegistry()
 
+    labels = parse_key_value_pairs(args.label)
     update_fun = create_update_function(
         args.sensor_name,
-        parse_key_value_pairs(args.label),
+        labels,
         registry
     )
 
@@ -47,6 +48,14 @@ def start_push_service():
         update_period=args.update_period
     )
 
+    motion_data_generator = MotionDataGenerator(
+        update_period=args.sensor_period,
+        sensor_name=args.sensor_name,
+        port_id=int(args.port_id),
+        labels=labels,
+        registry=registry
+    )
+
     def signal_handler(*args):
         sensor_read_thread.stop_update()
         requests.delete(service).raise_for_status()
@@ -55,5 +64,5 @@ def start_push_service():
         signal.signal(signal_id, signal_handler)
 
     atexit.register(signal_handler)
-
+    motion_data_generator.start()
     sensor_read_thread.run()

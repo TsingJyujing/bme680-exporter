@@ -5,8 +5,9 @@ from threading import Thread
 from typing import Optional, Callable
 
 import bme680
+import wiringpi
 from bme680 import FieldData
-from prometheus_client import Gauge, CollectorRegistry
+from prometheus_client import Gauge, CollectorRegistry, Counter
 
 log = logging.getLogger(__file__)
 
@@ -90,6 +91,7 @@ class SensorUpdater(Thread):
         :param update_period: Update gap
         """
         super().__init__()
+        self.daemon = True
         if i2c_address is not None:
             sensor = bme680.BME680(i2c_address)
         else:
@@ -140,3 +142,37 @@ class SensorUpdater(Thread):
                 )
             finally:
                 time.sleep(self.update_period)
+
+
+class MotionDataGenerator(Thread):
+    def __init__(
+            self,
+            update_period: float,
+            sensor_name: str,
+            port_id: int,
+            labels: dict,
+            registry: CollectorRegistry,
+    ):
+        super().__init__()
+        self.labels = labels
+        self.port_id = port_id
+        self.update_period = update_period
+        self.counter = Counter(
+            "sensor_{}_count".format(sensor_name),
+            "Motion metric of {}".format(sensor_name),
+            labelnames=list(labels.keys()),
+            registry=registry
+        )
+        self.daemon = True
+
+    def run(self) -> None:
+        while True:
+            try:
+                time.sleep(self.update_period)
+                sensor_data = wiringpi.digitalRead(self.port_id)
+                if len(self.labels) > 0:
+                    self.counter.labels(**self.labels).inc(sensor_data)
+                else:
+                    self.counter.inc(sensor_data)
+            except Exception as ex:
+                log.error("Error while reading sensor: " + str(ex))
