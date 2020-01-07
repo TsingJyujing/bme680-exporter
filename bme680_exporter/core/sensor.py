@@ -143,6 +143,7 @@ class SensorUpdater(Thread):
             finally:
                 time.sleep(self.update_period)
 
+GPIO_INITIALIZED = False
 
 class MotionDataGenerator(Thread):
     def __init__(
@@ -154,11 +155,16 @@ class MotionDataGenerator(Thread):
             registry: CollectorRegistry,
     ):
         super().__init__()
+        global GPIO_INITIALIZED
+        if not GPIO_INITIALIZED:
+            log.info("Initializing GPIO device")
+            wiringpi.wiringPiSetup()
+            GPIO_INITIALIZED = True
         self.labels = labels
         self.port_id = port_id
         self.update_period = update_period
         self.counter = Counter(
-            "sensor_{}_count".format(sensor_name),
+            "sensor_motion_{}_count".format(sensor_name),
             "Motion metric of {}".format(sensor_name),
             labelnames=list(labels.keys()),
             registry=registry

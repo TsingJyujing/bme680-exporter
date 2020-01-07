@@ -1,9 +1,13 @@
+import json
+from argparse import Namespace
+import logging
 from flask import Flask, make_response
 from prometheus_client import CollectorRegistry, generate_latest, CONTENT_TYPE_LATEST
 
 from bme680_exporter.core import SensorUpdater, create_update_function, MotionDataGenerator
 from bme680_exporter.util import get_base_arg_parser, parse_key_value_pairs
 
+log = logging.getLogger(__file__)
 
 def create_metrics_application(name: str, registry: CollectorRegistry):
     """
@@ -21,7 +25,7 @@ def create_metrics_application(name: str, registry: CollectorRegistry):
     return app
 
 
-def parse_args():
+def parse_args() -> Namespace:
     parser = get_base_arg_parser()
     parser.add_argument(
         "-p", "--port",
@@ -38,9 +42,12 @@ def parse_args():
 
 def start_web_service():
     args = parse_args()
+
+    for k,v in args.__dict__.items():
+        log.info("Parameter {} = {}".format(k,v))
+
     registry = CollectorRegistry()
     app = create_metrics_application("BME680-exporter", registry)
-
     labels = parse_key_value_pairs(args.label)
     sensor_read_thread = SensorUpdater(
         update_data_fun=create_update_function(
