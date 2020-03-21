@@ -46,8 +46,8 @@ bme680-exporter-pull [options]
 
 |name|required|default|type|example|comment|
 |-|-|-|-|-|-|
-|-p/--port|no|8080|int|8080|The port to listen|
-|-h/--host|no|0.0.0.0|str|127.0.0.1|The host name to listen|
+|--port|no|8080|int|8080|The port to listen|
+|--host|no|0.0.0.0|str|127.0.0.1|The host name to listen|
 
 ### Start Push Service
 

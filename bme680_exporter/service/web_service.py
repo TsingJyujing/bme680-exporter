@@ -24,12 +24,12 @@ def create_metrics_application(name: str, registry: CollectorRegistry):
 def parse_args():
     parser = get_base_arg_parser()
     parser.add_argument(
-        "-p", "--port",
+        "--port",
         default=8080, type=int,
         help="Service bind port number",
     )
     parser.add_argument(
-        "-h", "--host",
+        "--host",
         default='0.0.0.0', type=str,
         help="Service bind hostname",
     )
