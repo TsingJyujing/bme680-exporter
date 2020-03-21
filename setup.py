@@ -21,7 +21,8 @@ setup(
         "smbus",
         "flask",
         "prometheus_client",
-        "requests"
+        "requests",
+        "wiringpi"
     ],
     long_description=README,
     packages=find_packages(),
